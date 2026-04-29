@@ -1,0 +1,23 @@
+[
+  {
+    "name": "ac-4d1y4vw-shard-00-02.sx2apok.mongodb.net",
+    "port": 27017,
+    "priority": 0,
+    "weight": 0,
+    "type": "SRV"
+  },
+  {
+    "name": "ac-4d1y4vw-shard-00-00.sx2apok.mongodb.net",
+    "port": 27017,
+    "priority": 0,
+    "weight": 0,
+    "type": "SRV"
+  },
+  {
+    "name": "ac-4d1y4vw-shard-00-01.sx2apok.mongodb.net",
+    "port": 27017,
+    "priority": 0,
+    "weight": 0,
+    "type": "SRV"
+  }
+]

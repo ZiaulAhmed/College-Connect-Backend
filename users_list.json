@@ -1,0 +1,50 @@
+[
+  {
+    "_id": "692567bd17647e911555e37b",
+    "email": "admin@example.com",
+    "role": "admin",
+    "approvalStatus": "APPROVED"
+  },
+  {
+    "approvalStatus": "PENDING",
+    "_id": "692569f617647e911555e37e",
+    "email": "faculty@example.com",
+    "role": "faculty"
+  },
+  {
+    "approvalStatus": "PENDING",
+    "_id": "6926b308c886b47e9cbf93c0",
+    "email": "student@example.com",
+    "role": "student"
+  },
+  {
+    "_id": "693ee15bd2b6467e70113433",
+    "email": "forexample0099@gmail.com",
+    "role": "student",
+    "approvalStatus": "REJECTED"
+  },
+  {
+    "_id": "693eea75c168e9e10c0507c2",
+    "email": "forexample@gmail.com",
+    "role": "student",
+    "approvalStatus": "APPROVED"
+  },
+  {
+    "_id": "693eecc6e1c8098f35871b7c",
+    "email": "forexample00@gmail.com",
+    "role": "student",
+    "approvalStatus": "APPROVED"
+  },
+  {
+    "_id": "693eed58e1c8098f35871b90",
+    "email": "abc@123gmail.com",
+    "role": "student",
+    "approvalStatus": "APPROVED"
+  },
+  {
+    "_id": "69410c4531a5350db19ca825",
+    "email": "asadulislambtcs@adtu.in",
+    "role": "student",
+    "approvalStatus": "APPROVED"
+  }
+]
