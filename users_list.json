@@ -46,5 +46,17 @@
     "email": "asadulislambtcs@adtu.in",
     "role": "student",
     "approvalStatus": "APPROVED"
+  },
+  {
+    "_id": "69cd2600e8502e173b2c77e0",
+    "email": "teacher@test.com",
+    "role": "faculty",
+    "approvalStatus": "APPROVED"
+  },
+  {
+    "_id": "69cd455a777b289aea3df612",
+    "email": "ziaul32@gmail.com",
+    "role": "student",
+    "approvalStatus": "PENDING"
   }
 ]

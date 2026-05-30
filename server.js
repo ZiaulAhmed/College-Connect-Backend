@@ -27,6 +27,9 @@ app.use(morgan("dev"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/announcements", require("./routes/announcementRoutes"));
 app.use("/api/events", require("./routes/eventRoutes"));
+app.use("/api/timetable", require("./routes/timetableRoutes"));
+app.use("/api/academic", require("./routes/academicRoutes")); // ✅ ADD ACADEMIC ROUTES
+app.use("/api/feedback", require("./routes/feedbackRoutes")); // Add Feedback Routes
 
 // 🔹 STEP 3: Admin routes (Approve / Reject students & faculty)
 app.use("/api/admin", require("./routes/adminRoutes"));

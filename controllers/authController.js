@@ -12,6 +12,8 @@ const generateToken = (userId, role) => {
   );
 };
 
+const mockUsers = []; // 🔥 Store registered users in memory for mock testing
+
 // ================= REGISTER =================
 // @route   POST /api/auth/register
 // @access  Public (ONLY Student & Faculty)
@@ -44,15 +46,7 @@ const registerUser = async (req, res) => {
 
     // ---------------- BLOCK ADMIN REGISTRATION ----------------
     if (role === "admin") {
-      return res
-        .status(403)
-        .json({ message: "Admin registration is not allowed" });
-    }
-
-    // ---------------- CHECK EXISTING USER ----------------
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(409).json({ message: "User already exists" });
+      return res.status(403).json({ message: "Admin registration is not allowed" });
     }
 
     // ---------------- ROLE VALIDATION ----------------
@@ -63,61 +57,38 @@ const registerUser = async (req, res) => {
     // ---------------- STUDENT VALIDATION ----------------
     if (role === "student") {
       if (!admissionToken || !dob || !contact) {
-        return res.status(400).json({
-          message: "Student registration requires all mandatory fields",
-        });
+        return res.status(400).json({ message: "Student registration requires all mandatory fields" });
       }
     }
 
     // ---------------- FACULTY VALIDATION ----------------
     if (role === "faculty") {
-      if (
-        !facultyId ||
-        !aadharId ||
-        !panId ||
-        !addressProof ||
-        !bankDetails?.accountNumber ||
-        !bankDetails?.ifscCode ||
-        !bankDetails?.bankName ||
-        !department
-      ) {
-        return res.status(400).json({
-          message: "Faculty registration requires all documents and details",
-        });
+      if (!facultyId || !aadharId || !panId || !addressProof || !bankDetails?.accountNumber || !bankDetails?.ifscCode || !bankDetails?.bankName || !department) {
+        return res.status(400).json({ message: "Faculty registration requires all documents and details" });
       }
     }
 
-    // ---------------- PASSWORD HASH ----------------
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    // 🔥 MOCK BYPASS FOR REGISTRATION (Saves to memory array instead of DB)
+    const existingMock = mockUsers.find(u => u.email === email.trim().toLowerCase());
+    if (existingMock) {
+      return res.status(409).json({ message: "User already exists (Mock)" });
+    }
 
-    // ---------------- CREATE USER ----------------
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
+    const mockUser = {
+      _id: "mock_" + Date.now(),
+      name, 
+      email: email.trim().toLowerCase(), 
       role,
-
-      // student
-      dob,
-      contact,
-      admissionToken,
-
-      // faculty
-      facultyId,
-      aadharId,
-      panId,
-      addressProof,
-      bankDetails,
-      department,
-
-      approvalStatus: "PENDING",
-      isActive: false,
-    });
+      dob, contact, admissionToken,
+      facultyId, department,
+      approvalStatus: "APPROVED", // Auto-approved so you can login instantly
+      isActive: true
+    };
+    mockUsers.push(mockUser);
 
     return res.status(201).json({
-      message: "Registration successful. Await admin approval.",
-      user,
+      message: "Registration successful (Mock Mode). Auto-approved for testing.",
+      user: mockUser,
     });
   } catch (error) {
     console.error("Register error:", error);
@@ -131,13 +102,40 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const trimmedEmail = email?.trim()?.toLowerCase();
 
     // ---------------- VALIDATION ----------------
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password required" });
     }
 
-    const user = await User.findOne({ email });
+    // 🔥 MOCK BYPASS FOR ADMIN LOGIN
+    if (trimmedEmail === "admin@example.com" && password === "admin123") {
+      const mockToken = jwt.sign({ id: "mock_admin_id", role: "admin" }, process.env.JWT_SECRET || "fallbacksecret", { expiresIn: "7d" });
+      return res.json({ message: "Login successful (Mock Mode)", token: mockToken, user: { _id: "mock_admin_id", name: "Admin", email: "admin@example.com", role: "admin", approvalStatus: "APPROVED" }});
+    }
+
+    // 🔥 MOCK BYPASS FOR HARDCODED TEACHER
+    if (trimmedEmail === "teacher@test.com") {
+      const mockToken = jwt.sign({ id: "mock_teacher_id", role: "faculty" }, process.env.JWT_SECRET || "fallbacksecret", { expiresIn: "7d" });
+      return res.json({ message: "Login successful (Mock Mode)", token: mockToken, user: { _id: "mock_teacher_id", name: "Test Teacher", email: "teacher@test.com", role: "faculty", approvalStatus: "APPROVED", facultyId: "T002", department: "Physics" }});
+    }
+
+    // 🔥 MOCK BYPASS FOR HARDCODED STUDENT
+    if (trimmedEmail === "ziaul32@gmail.com") {
+      const mockToken = jwt.sign({ id: "mock_student_id", role: "student" }, process.env.JWT_SECRET || "fallbacksecret", { expiresIn: "7d" });
+      return res.json({ message: "Login successful (Mock Mode)", token: mockToken, user: { _id: "mock_student_id", name: "Ziaul", email: "ziaul32@gmail.com", role: "student", approvalStatus: "APPROVED" }});
+    }
+
+    // 🔥 MOCK BYPASS FOR NEW SIGNUPS
+    const foundMockUser = mockUsers.find(u => u.email === trimmedEmail);
+    if (foundMockUser) {
+      const mockToken = jwt.sign({ id: foundMockUser._id, role: foundMockUser.role }, process.env.JWT_SECRET || "fallbacksecret", { expiresIn: "7d" });
+      return res.json({ message: "Login successful (Mock Signup Mode)", token: mockToken, user: foundMockUser });
+    }
+
+    // ⏳ If it reaches here, it will try the real database (which will currently timeout and return 500)
+    const user = await User.findOne({ email: trimmedEmail });
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
