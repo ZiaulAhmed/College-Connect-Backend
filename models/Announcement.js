@@ -5,7 +5,7 @@ const announcementSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
     content: { type: String, required: true },
-    author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    author: { type: mongoose.Schema.Types.Mixed, ref: "User", required: true },
     department: { type: String, default: null }, // null = college-wide
     isGlobal: { type: Boolean, default: false },
     pinned: { type: Boolean, default: false },

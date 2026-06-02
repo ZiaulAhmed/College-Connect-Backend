@@ -25,7 +25,7 @@ const createAnnouncement = async (req, res) => {
     res.status(201).json({ message: "Announcement created", announcement });
   } catch (error) {
     console.error("createAnnouncement error:", error);
-    res.status(500).json({ message: "Server error creating announcement" });
+    res.status(500).json({ message: error.message || "Server error creating announcement" });
   }
 };
 

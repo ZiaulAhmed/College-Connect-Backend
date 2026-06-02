@@ -18,7 +18,7 @@ const protect = async (req, res, next) => {
       // Support for mock users from authController bypass
       if (decoded.id && decoded.id.toString().startsWith("mock_")) {
         req.user = {
-          _id: decoded.id,
+          _id: "000000000000000000000001", // Valid 24-char hex ObjectId for Mongoose
           role: decoded.role,
           department: "Physics" // Default for testing
         };
