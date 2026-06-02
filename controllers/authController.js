@@ -122,9 +122,19 @@ const loginUser = async (req, res) => {
     }
 
     // 🔥 MOCK BYPASS FOR HARDCODED STUDENT
-    if (trimmedEmail === "ziaul32@gmail.com") {
+    const mockStudentEmails = [
+      "ziaul32@gmail.com",
+      "abcd2@gmail.com",
+      "abdul43@gmail.com",
+      "asadul23@gmail.com",
+      "deepak43@gmail.com",
+      "jain43@gmail.com",
+      "moki43@gmail.com",
+      "rakibul23@gmail.com"
+    ];
+    if (mockStudentEmails.includes(trimmedEmail)) {
       const mockToken = jwt.sign({ id: "mock_student_id", role: "student" }, process.env.JWT_SECRET || "fallbacksecret", { expiresIn: "7d" });
-      return res.json({ message: "Login successful (Mock Mode)", token: mockToken, user: { _id: "mock_student_id", name: "Ziaul", email: "ziaul32@gmail.com", role: "student", approvalStatus: "APPROVED" }});
+      return res.json({ message: "Login successful (Mock Mode)", token: mockToken, user: { _id: "mock_student_id", name: "Student", email: trimmedEmail, role: "student", approvalStatus: "APPROVED" }});
     }
 
     // 🔥 MOCK BYPASS FOR NEW SIGNUPS
